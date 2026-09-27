@@ -40,8 +40,12 @@ don't rely on it as a linter or repair tool, especially with `-i`.
 ```bash
 git clone <this-repo>
 cd code-formatter
-pip install -r requirements.txt   # installs black globally
+./scripts/install_deps.sh   # Windows: scripts\install_deps.bat
 ```
+
+This installs `black` (from `requirements.txt`) and `rustfmt` (via `rustup`,
+if you have it). `npx`/Node.js (for prettier) and Ollama are separate,
+larger installs not covered by this script — see Requirements above.
 
 ## Usage
 
@@ -60,6 +64,9 @@ On macOS/Linux, `formatter.py` is also executable directly (`./formatter.py file
 
 ## scripts/
 
+- `scripts/install_deps.sh` / `scripts/install_deps.bat` — installs the
+  Python requirements and `rustfmt` (via `rustup`, if present; otherwise it
+  tells you how to get Rust from https://rustup.rs).
 - `scripts/download_model.sh` — pulls whatever model `formatter.py` is
   configured to use (reads `OLLAMA_MODEL` directly, so it never drifts out
   of sync with the code). Requires Ollama installed.
