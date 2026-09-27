@@ -1,9 +1,19 @@
-def calculate_total(price, tax):
-# Bad: This line must be indented because it belongs inside the function
-total = price + (price * tax)
-return total
+import os,sys
 
-if True:
-# Bad: Missing indentation after an 'if' statement
-print("This will crash!")
+def greet_user( name ):
+    print( "Hello, "+name+"!" )
 
+class   Person:
+    def __init__(self,name,age):
+        self.name=name
+        self.age    = age
+    def is_adult( self ):
+        if self.age>=18:
+            return True
+        else:
+            return False
+
+def add(x,y):
+ return x+y
+
+data = { 'a':1,'b'  :2,'c': 3 }

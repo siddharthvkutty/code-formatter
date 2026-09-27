@@ -18,15 +18,19 @@ def test_strip_code_fence():
 
 def test_prettify_dispatch_order():
     fmt.format_with_rustfmt = lambda code: "RUSTFMT\n"
+    fmt.format_with_black = lambda code: "BLACK\n"
     fmt.format_with_prettier = lambda code, ext: "PRETTIER\n"
     fmt.format_with_llm = lambda code, ext: "LLM\n"
     assert fmt.prettify("code", ".rs") == "RUSTFMT\n"
 
     fmt.format_with_rustfmt = lambda code: None
+    assert fmt.prettify("code", ".py") == "BLACK\n"
+
+    fmt.format_with_black = lambda code: None
     assert fmt.prettify("code", ".js") == "PRETTIER\n"
 
     fmt.format_with_prettier = lambda code, ext: None
-    assert fmt.prettify("code", ".py") == "LLM\n"
+    assert fmt.prettify("code", ".go") == "LLM\n"
 
 
 if __name__ == "__main__":

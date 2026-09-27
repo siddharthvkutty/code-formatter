@@ -2,6 +2,7 @@
 """Prettify code: real formatters when available, LLM fallback otherwise."""
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -39,6 +40,17 @@ def format_with_prettier(code, ext):
         return None
     result = subprocess.run(
         ["npx", "--yes", "prettier", "--stdin-filepath", f"file{ext}"],
+        input=code, capture_output=True, text=True,
+        shell=(os.name == "nt"),  # npx is a .cmd shim on Windows, needs the shell to run it
+    )
+    return result.stdout if result.returncode == 0 else None
+
+
+def format_with_black(code):
+    if not shutil.which("black"):
+        return None
+    result = subprocess.run(
+        ["black", "--quiet", "-"],
         input=code, capture_output=True, text=True,
     )
     return result.stdout if result.returncode == 0 else None
@@ -89,6 +101,10 @@ def prettify(code, ext):
         out = format_with_rustfmt(code)
         if out is not None:
             return out
+    if ext == ".py":
+        out = format_with_black(code)
+        if out is not None:
+            return out
     if ext in PRETTIER_EXTS:
         out = format_with_prettier(code, ext)
         if out is not None:
@@ -111,7 +127,10 @@ def main():
         code = sys.stdin.read()
         ext = ("." + args.lang.lstrip(".")) if args.lang else ""
 
-    result = prettify(code, ext)
+    try:
+        result = prettify(code, ext)
+    except RuntimeError as e:
+        sys.exit(f"error: {e}")
 
     if args.in_place:
         if not args.file:
