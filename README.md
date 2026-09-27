@@ -17,6 +17,13 @@ If the real formatter for a language isn't installed, or it rejects the
 input (e.g. genuinely broken/unparseable syntax, not just messy
 indentation), it falls back to the LLM automatically.
 
+Because the LLM works by regenerating the code rather than rearranging
+whitespace, it will often also repair small structural breakage along the
+way (an unclosed HTML tag, a missing colon) instead of just erroring out
+like a real formatter would. This isn't a guaranteed feature — it's not
+verified or deterministic the way `rustfmt`/`black`/`prettier` are, so
+don't rely on it as a linter or repair tool, especially with `-i`.
+
 ## Requirements
 
 - Python 3
@@ -52,6 +59,22 @@ cat messy.go | python3 formatter.py --lang go
 ```
 
 On macOS/Linux, `formatter.py` is also executable directly (`./formatter.py file.js`).
+
+## scripts/
+
+- `scripts/download_model.sh` — pulls whatever model `formatter.py` is
+  configured to use (reads `OLLAMA_MODEL` directly, so it never drifts out
+  of sync with the code). Requires Ollama installed.
+- `scripts/add_alias.sh` (Linux/macOS) — adds a `format` alias to
+  `~/.bashrc` so you can run `format file.py` from anywhere. Safe to
+  re-run; it skips if the alias already exists.
+- `scripts/add_alias.bat` (Windows) — cmd has no `.bashrc` equivalent, so
+  this creates a `format.bat` shim in `scripts/` and adds that folder to
+  your user `PATH`. Run once, open a new cmd window, then `format file.py`
+  works the same way.
+
+Both alias scripts prefer the project's `.venv` Python if one exists, so
+`black` (or anything else you installed in the venv) is picked up.
 
 ## Test
 
