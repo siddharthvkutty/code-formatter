@@ -40,9 +40,7 @@ don't rely on it as a linter or repair tool, especially with `-i`.
 ```bash
 git clone <this-repo>
 cd code-formatter
-python3 -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install black           # optional, for real Python formatting
+pip install -r requirements.txt   # installs black globally
 ```
 
 ## Usage
@@ -72,9 +70,6 @@ On macOS/Linux, `formatter.py` is also executable directly (`./formatter.py file
   this creates a `format.bat` shim in `scripts/` and adds that folder to
   your user `PATH`. Run once, open a new cmd window, then `format file.py`
   works the same way.
-
-Both alias scripts prefer the project's `.venv` Python if one exists, so
-`black` (or anything else you installed in the venv) is picked up.
 
 ## Test
 

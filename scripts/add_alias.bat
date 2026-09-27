@@ -6,12 +6,9 @@ REM works from any cmd window. Run once, then open a new cmd window.
 set "SCRIPT_DIR=%~dp0"
 set "REPO_ROOT=%SCRIPT_DIR%.."
 
-set "PYTHON=python"
-if exist "%REPO_ROOT%\.venv\Scripts\python.exe" set "PYTHON=%REPO_ROOT%\.venv\Scripts\python.exe"
-
 > "%SCRIPT_DIR%format.bat" (
     echo @echo off
-    echo "%PYTHON%" "%REPO_ROOT%\formatter.py" %%*
+    echo python "%REPO_ROOT%\formatter.py" %%*
 )
 echo Created %SCRIPT_DIR%format.bat
 
